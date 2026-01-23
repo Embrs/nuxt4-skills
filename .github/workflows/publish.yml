@@ -1,28 +1,57 @@
 name: Publish Package to npm
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [main]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      id-token: write  # 必須，用於 npm provenance
+      contents: write
+      id-token: write
+    
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
-      
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install latest npm (required for OIDC)
+        run: npm install -g npm@latest
+
       - name: Install dependencies
-        run: npm ci
-      
-      - name: Publish to npm
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm install
+
+      - name: Create tag
+        id: version
+        run: |
+          # 獲取當前版本號
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+
+          # 檢查 tag 是否已存在
+          if git rev-parse "v$CURRENT_VERSION" >/dev/null 2>&1; then
+            echo "Tag v$CURRENT_VERSION already exists, skipping publish..."
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # 創建並推送 tag
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$CURRENT_VERSION" -m "Release v$CURRENT_VERSION"
+          git push origin "v$CURRENT_VERSION"
+
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "should_publish=true" >> $GITHUB_OUTPUT
+
+      - name: Publish to npm (OIDC Trusted Publishing)
+        if: steps.version.outputs.should_publish == 'true'
+        run: npm publish --access public --provenance
