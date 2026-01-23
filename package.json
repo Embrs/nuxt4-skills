@@ -1,0 +1,26 @@
+{
+  "name": "embrs-skills-cli",
+  "version": "1.0.0",
+  "description": "CLI to install Agent Skills and Workflows",
+  "main": "bin/cli.js",
+  "bin": {
+    "install-skills": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "agent",
+    "skills",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^9.4.1",
+    "fs-extra": "^10.1.0",
+    "inquirer": "^8.2.5",
+    "ora": "^5.4.1"
+  }
+}
