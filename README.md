@@ -5,7 +5,7 @@
 ## 快速開始
 
 ```bash
-npx embrs-skills-cli@latest
+npx @embrs/nuxt4-skills@latest
 ```
 
 執行後會引導您選擇目標 IDE 環境，支援多選同時安裝到多個位置。
