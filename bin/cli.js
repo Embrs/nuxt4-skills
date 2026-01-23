@@ -14,14 +14,15 @@ async function main() {
   try {
     const answers = await inquirer.prompt([
       {
-        type: 'list',
-        name: 'ide',
-        message: '請問您使用的 IDE 或 Agent 環境是？',
+        type: 'checkbox',
+        name: 'ides',
+        message: '請選擇要安裝的 IDE 環境（可複選，使用空白鍵選取）：',
         choices: [
-          { name: 'Antigravity / Claude / VS Code (目標路徑: .agent/)', value: 'antigravity' },
-          { name: 'Cursor (目標路徑: .cursor/rules/)', value: 'cursor' },
-          { name: 'Windsurf (目標路徑: .windsurf/rules/)', value: 'windsurf' }
-        ]
+          { name: 'Antigravity / Claude / VS Code → .agent/', value: 'antigravity', checked: true },
+          { name: 'Cursor → .cursor/rules/', value: 'cursor' },
+          { name: 'Windsurf → .windsurf/rules/', value: 'windsurf' }
+        ],
+        validate: (input) => input.length > 0 || '請至少選擇一個環境'
       },
       {
         type: 'confirm',
@@ -38,57 +39,53 @@ async function main() {
 
     const spinner = ora('正在安裝 Skills 與 Workflows...').start();
     const targetRoot = process.cwd();
+    const installedPaths = [];
     
-    // 定義目標路徑
-    let destBase;
-    
-    if (answers.ide === 'antigravity') {
-      destBase = path.join(targetRoot, '.agent');
-    } else if (answers.ide === 'cursor') {
-      destBase = path.join(targetRoot, '.cursor/rules');
-    } else if (answers.ide === 'windsurf') {
-      destBase = path.join(targetRoot, '.windsurf/rules');
-    } else {
-       spinner.fail('未知的 IDE 選項');
-       process.exit(1);
-    }
+    // IDE 路徑對應表
+    const idePathMap = {
+      antigravity: '.agent',
+      cursor: '.cursor/rules',
+      windsurf: '.windsurf/rules'
+    };
 
-    // 確保結構:
-    // root/.agent/skills
-    // root/.agent/workflows
-    
-    const destSkills = path.join(destBase, 'skills');
-    const destWorkflows = path.join(destBase, 'workflows');
+    // 遍歷所有選擇的 IDE 環境進行安裝
+    for (const ide of answers.ides) {
+      const destBase = path.join(targetRoot, idePathMap[ide]);
+      const destSkills = path.join(destBase, 'skills');
+      const destWorkflows = path.join(destBase, 'workflows');
 
-    // 確保目錄存在
-    await fs.ensureDir(destSkills);
-    await fs.ensureDir(destWorkflows);
+      // 確保目錄存在
+      await fs.ensureDir(destSkills);
+      await fs.ensureDir(destWorkflows);
 
-    // 複製 Skills
-    const srcSkills = path.join(TEMPLATE_DIR, 'skills');
-    if (await fs.pathExists(srcSkills)) {
+      // 複製 Skills
+      const srcSkills = path.join(TEMPLATE_DIR, 'skills');
+      if (await fs.pathExists(srcSkills)) {
         await fs.copy(srcSkills, destSkills, { overwrite: true });
-    }
+      }
 
-    // 複製 Workflows
-    const srcWorkflows = path.join(TEMPLATE_DIR, 'workflows');
-    if (await fs.pathExists(srcWorkflows)) {
+      // 複製 Workflows
+      const srcWorkflows = path.join(TEMPLATE_DIR, 'workflows');
+      if (await fs.pathExists(srcWorkflows)) {
         await fs.copy(srcWorkflows, destWorkflows, { overwrite: true });
+      }
+
+      installedPaths.push(destBase);
     }
 
     spinner.succeed(chalk.green('安裝完成！'));
-    console.log(chalk.dim(`\n檔案已安裝至:`));
-    console.log(chalk.dim(`- ${destSkills}`));
-    console.log(chalk.dim(`- ${destWorkflows}`));
+    console.log(chalk.dim('\n檔案已安裝至:'));
+    installedPaths.forEach(p => console.log(chalk.dim(`  • ${p}`)));
 
-    if (answers.ide === 'cursor') {
-        console.log(chalk.cyan(`\n[提示] Cursor 使用者:`));
-        console.log(chalk.cyan(`請確認 .cursor/rules 被包含在您的 Context 索引範圍內。`));
+    // 顯示對應的提示
+    if (answers.ides.includes('cursor')) {
+      console.log(chalk.cyan('\n[提示] Cursor 使用者:'));
+      console.log(chalk.cyan('請確認 .cursor/rules 被包含在您的 Context 索引範圍內。'));
     }
     
-    if (answers.ide === 'antigravity') {
-        console.log(chalk.cyan(`\n[提示] Antigravity / Claude 使用者:`));
-        console.log(chalk.cyan(`請確認您的 Prompt 或設定檔已指向 .agent 目錄。`));
+    if (answers.ides.includes('antigravity')) {
+      console.log(chalk.cyan('\n[提示] Antigravity / Claude 使用者:'));
+      console.log(chalk.cyan('請確認您的 Prompt 或設定檔已指向 .agent 目錄。'));
     }
 
   } catch (err) {
