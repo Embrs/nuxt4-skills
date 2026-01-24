@@ -19,8 +19,8 @@ async function main() {
         message: '請選擇要安裝的 IDE 環境（可複選，使用空白鍵選取）：',
         choices: [
           { name: 'Antigravity / Claude / VS Code → .agent/', value: 'antigravity', checked: true },
-          { name: 'Cursor → .cursor/rules/', value: 'cursor' },
-          { name: 'Windsurf → .windsurf/rules/', value: 'windsurf' }
+          { name: 'Cursor → .cursor/', value: 'cursor' },
+          { name: 'Windsurf → .windsurf/', value: 'windsurf' }
         ],
         validate: (input) => input.length > 0 || '請至少選擇一個環境'
       },
@@ -44,8 +44,8 @@ async function main() {
     // IDE 路徑對應表
     const idePathMap = {
       antigravity: '.agent',
-      cursor: '.cursor/rules',
-      windsurf: '.windsurf/rules'
+      cursor: '.cursor',
+      windsurf: '.windsurf'
     };
 
     // 遍歷所有選擇的 IDE 環境進行安裝

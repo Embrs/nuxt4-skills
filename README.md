@@ -14,8 +14,8 @@ npx @embrs/nuxt4-skills@latest
 
 - **多環境支援**：支援同時安裝至多個 IDE 環境
   - ✅ **Antigravity / Claude / VS Code** → `.agent/`
-  - ✅ **Cursor** → `.cursor/rules/`
-  - ✅ **Windsurf** → `.windsurf/rules/`
+  - ✅ **Cursor** → `.cursor/`
+  - ✅ **Windsurf** → `.windsurf/`
 - **標準化技能**：內建經過驗證的 8 大 Skills 模組
 - **通用 Workflows**：Git Commit 規範、專案初始化等
 
