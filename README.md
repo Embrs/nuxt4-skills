@@ -40,6 +40,59 @@ npx @embrs/nuxt4-skills@latest
 ### Antigravity / Claude 使用者
 確保 Prompt 或設定檔已指向 `.agent` 目錄。
 
+### MCP：mcp-feedback-collector-web 安裝與設定路徑
+
+本套件內建 `user-feedback` skill，若您希望在 Claude Desktop / Cursor 等環境中使用互動式回饋視窗，請先安裝並設定 `mcp-feedback-collector-web` MCP 服務。
+
+參考專案：
+https://github.com/sanshao85/mcp-feedback-collector-web
+
+#### 1) 安裝 Node.js 版本（推薦）
+
+```bash
+# 直接運行（推薦，無需全局安裝）
+npx mcp-feedback-collector
+
+# 或全局安裝
+npm install -g mcp-feedback-collector
+```
+
+#### 2) 設定 Claude Desktop（claude_desktop_config.json 路徑）
+
+- **macOS**：`~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**：`%APPDATA%\Claude\claude_desktop_config.json`
+- **Linux**：`~/.config/Claude/claude_desktop_config.json`
+
+在檔案中加入（或合併）以下設定：
+
+```json
+{
+  "mcpServers": {
+    "mcp-feedback-collector": {
+      "command": "npx",
+      "args": ["-y", "mcp-feedback-collector@latest"],
+      "env": {
+        "MCP_API_KEY": "your_api_key_here",
+        "MCP_API_BASE_URL": "https://api.ssopen.top",
+        "MCP_DEFAULT_MODEL": "grok-3",
+        "MCP_WEB_PORT": "5050",
+        "MCP_DIALOG_TIMEOUT": "60000",
+        "MCP_ENABLE_IMAGE_TO_TEXT": "true"
+      }
+    }
+  }
+}
+```
+
+**環境變數說明：**
+- `MCP_API_KEY`: AI API 金鑰（必填）
+- `MCP_API_BASE_URL`: API 基礎 URL
+- `MCP_WEB_PORT`: Web 服務端口（預設 5000）
+- `MCP_DIALOG_TIMEOUT`: 回饋收集超時時間（毫秒）
+- `MCP_ENABLE_IMAGE_TO_TEXT`: 啟用圖片轉文字功能
+
+完成後重啟 Claude Desktop。
+
 ## License
 
 ISC
