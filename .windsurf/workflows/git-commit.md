@@ -4,7 +4,7 @@ description: Git 提交 + 知識庫維護
 
 # Git 提交流程
 
-> 提交變更並維護 Agent Skills 知識庫（`.agent/skills/project-knowledge/`）。
+> 提交變更並維護 Agent Skills 知識庫（`.windsurf/skills/project-knowledge/`）。
 
 ---
 
@@ -27,24 +27,11 @@ description: Git 提交 + 知識庫維護
    git status
    ```
 
-### Step 2: 暫存變更
-2. 加入所有變更：
-   ```bash
-   git add .
-   ```
+### Step 2: 分析變更類型
 
-### Step 3: 檢視變更
-// turbo
-3. 檢視變更內容：
-   ```bash
-   git diff --staged --stat
-   ```
+2. 根據變更檔案分析是否需要更新知識庫：
 
-### Step 4: 分析變更類型
-
-4. 根據變更檔案分析是否需要更新知識庫：
-
-#### 架構相關變更 → 更新 `.agent/skills/project-knowledge/items/`
+#### 架構相關變更 → 更新 `.windsurf/skills/project-knowledge/items/`
 
 | 變更類型 | 更新目標 |
 |----------|----------|
@@ -60,18 +47,31 @@ description: Git 提交 + 知識庫維護
 | 新的業務流程 | `.memory/context/` 新增文件 |
 | 業務邏輯變更 | 對應業務規則文件 |
 
-5. 若需更新，執行對應更新並記錄到維護日誌
+3. 若需更新，執行對應更新並記錄到維護日誌
 
-### Step 5: 更新維護日誌（若有知識庫變更）
-6. 若有更新知識庫，記錄到：
+### Step 3: 更新維護日誌（若有知識庫變更）
+4. 若有更新知識庫，記錄到：
    ```
-   .agent/skills/project-knowledge/references/maintenance-log.md
+   .windsurf/skills/project-knowledge/references/maintenance-log.md
    ```
    
    格式：
    ```markdown
    ### YYYY-MM-DD
    - **[類型]** `影響文件` - 變更描述
+   ```
+
+### Step 4: 暫存所有變更
+5. 加入所有變更（包含原始變更 + 知識庫更新）：
+   ```bash
+   git add .
+   ```
+
+### Step 5: 檢視變更
+// turbo
+6. 檢視變更內容：
+   ```bash
+   git diff --staged --stat
    ```
 
 ### Step 6: 生成 Commit 訊息
