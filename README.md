@@ -1,6 +1,6 @@
-# Embrs Skills CLI
+# Nuxt4 Skills
 
-一鍵安裝標準化 Agent Skills 與 Workflows 的命令列工具。
+專屬於 [nuxt4-base](https://github.com/Embrs/nuxt4-base) 的 Skills 套件
 
 ## 快速開始
 

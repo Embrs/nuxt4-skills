@@ -8,6 +8,58 @@ const ora = require('ora');
 
 const TEMPLATE_DIR = path.join(__dirname, '../templates');
 
+/**
+ * 複製目錄並動態替換路徑引用
+ */
+async function copyAndReplacePaths(srcDir, destDir, targetIde) {
+  await fs.ensureDir(destDir);
+  
+  // IDE 路徑替換映射
+  const pathReplacements = {
+    antigravity: {
+      '.agent': '.agent',
+      '.cursor': '.agent',
+      '.windsurf': '.agent'
+    },
+    cursor: {
+      '.agent': '.cursor',
+      '.cursor': '.cursor',
+      '.windsurf': '.cursor'
+    },
+    windsurf: {
+      '.agent': '.windsurf',
+      '.cursor': '.windsurf',
+      '.windsurf': '.windsurf'
+    }
+  };
+
+  const replacements = pathReplacements[targetIde];
+  
+  // 遞歸處理所有檔案
+  const items = await fs.readdir(srcDir, { withFileTypes: true });
+  
+  for (const item of items) {
+    const srcPath = path.join(srcDir, item.name);
+    const destPath = path.join(destDir, item.name);
+    
+    if (item.isDirectory()) {
+      await copyAndReplacePaths(srcPath, destPath, targetIde);
+    } else {
+      // 讀取檔案內容
+      let content = await fs.readFile(srcPath, 'utf8');
+      
+      // 替換路徑引用
+      for (const [oldPath, newPath] of Object.entries(replacements)) {
+        const regex = new RegExp(`\\${oldPath}`, 'g');
+        content = content.replace(regex, newPath);
+      }
+      
+      // 寫入檔案
+      await fs.writeFile(destPath, content);
+    }
+  }
+}
+
 async function main() {
   console.log(chalk.bold.blue('\n🔥  Embrs Skills Toolkit 安裝程式 \n'));
 
@@ -58,16 +110,16 @@ async function main() {
       await fs.ensureDir(destSkills);
       await fs.ensureDir(destWorkflows);
 
-      // 複製 Skills
+      // 複製 Skills（使用路徑替換）
       const srcSkills = path.join(TEMPLATE_DIR, 'skills');
       if (await fs.pathExists(srcSkills)) {
-        await fs.copy(srcSkills, destSkills, { overwrite: true });
+        await copyAndReplacePaths(srcSkills, destSkills, ide);
       }
 
-      // 複製 Workflows
+      // 複製 Workflows（使用路徑替換）
       const srcWorkflows = path.join(TEMPLATE_DIR, 'workflows');
       if (await fs.pathExists(srcWorkflows)) {
-        await fs.copy(srcWorkflows, destWorkflows, { overwrite: true });
+        await copyAndReplacePaths(srcWorkflows, destWorkflows, ide);
       }
 
       installedPaths.push(destBase);
