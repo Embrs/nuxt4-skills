@@ -1,6 +1,6 @@
 {
   "name": "@embrs/nuxt4-skills",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "CLI to install Agent Skills and Workflows",
   "main": "bin/cli.js",
   "repository": {
