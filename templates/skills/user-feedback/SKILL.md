@@ -26,11 +26,35 @@ description: |
 **重要：使用前必須檢查工具可用性**
 
 ```javascript
-// 檢查 mcp-feedback-collector 工具是否存在
+// 動態檢測可用的回饋工具
 const checkToolAvailability = () => {
-  // 確認 MCP 服務可用後才執行
-  if (toolAvailable) {
-    mcp2_collect_feedback({
+  // 檢測所有可能的 collect_feedback 工具
+  const possibleTools = [
+    'mcp0_collect_feedback',
+    'mcp1_collect_feedback', 
+    'mcp2_collect_feedback',
+    'mcp3_collect_feedback',
+    'mcp4_collect_feedback',
+    'mcp5_collect_feedback',
+    'mcp6_collect_feedback',
+    'mcp7_collect_feedback',
+    'mcp8_collect_feedback',
+    'mcp9_collect_feedback'
+  ];
+  
+  // 找到第一個可用的工具
+  const availableTool = possibleTools.find(tool => {
+    try {
+      // 檢查工具是否存在且可調用
+      return typeof window[tool] === 'function' || 
+             typeof globalThis[tool] === 'function';
+    } catch {
+      return false;
+    }
+  });
+  
+  if (availableTool && toolAvailable) {
+    window[availableTool]({
       work_summary: "工作內容總結"
     });
   } else {
@@ -44,9 +68,15 @@ const checkToolAvailability = () => {
 - `work_summary`: 工作內容總結，讓用戶清楚了解回饋主題
 
 **工具可用性檢查流程：**
-1. 確認 `mcp-feedback-collector` 服務已啟動
-2. 驗證工具函數可正常調用
-3. 若不可用，使用備用文字詢問方案
+1. **動態檢測** - 掃描所有可能的 collect_feedback 工具（mcp0_ 到 mcp9_）
+2. **驗證可用性** - 確認工具函數存在且可正常調用
+3. **使用第一個可用工具** - 按順序使用找到的第一個可用工具
+4. **備用方案** - 若所有工具都不可用，使用文字詢問方式
+
+**工具檢測範圍：**
+- `mcp0_collect_feedback` 到 `mcp9_collect_feedback`
+- 涵蓋最多 10 個 MCP 服務器的可能順序
+- 自動適應 MCP 服務器配置變更
 
 ## 使用範例
 

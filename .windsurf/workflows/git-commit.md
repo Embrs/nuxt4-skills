@@ -61,22 +61,37 @@ description: Git 提交 + 知識庫維護
    - **[類型]** `影響文件` - 變更描述
    ```
 
-### Step 4: 暫存所有變更
-5. 加入所有變更（包含原始變更 + 知識庫更新）：
+### Step 4: 更新版本號（若有功能變更）
+
+5. 若變更類型為 `feat` 或 `fix`，更新 `package.json` 版本號：
+
+| 變更類型 | 版本更新 | 範例 |
+|----------|----------|------|
+| `fix` | patch +1 | 1.0.0 → 1.0.1 |
+| `feat` | minor +1 | 1.0.0 → 1.1.0 |
+| 重大變更 | major +1 | 1.0.0 → 2.0.0 |
+
+```bash
+# 使用 npm version（自動更新 package.json）
+npm version patch --no-git-tag-version  # 或 minor / major
+```
+
+### Step 5: 暫存所有變更
+6. 加入所有變更（包含原始變更 + 知識庫更新 + 版本更新）：
    ```bash
    git add .
    ```
 
-### Step 5: 檢視變更
+### Step 6: 檢視變更
 // turbo
-6. 檢視變更內容：
+7. 檢視變更內容：
    ```bash
    git diff --staged --stat
    ```
 
-### Step 6: 生成 Commit 訊息
+### Step 7: 生成 Commit 訊息
 
-7. 根據 `git diff --staged` 生成 Conventional Commits 訊息：
+8. 根據 `git diff --staged` 生成 Conventional Commits 訊息：
 
 **格式**：
 ```
@@ -96,7 +111,7 @@ description: Git 提交 + 知識庫維護
 
 **語言**：繁體中文
 
-### Step 7: 執行提交
+### Step 8: 執行提交
 ```bash
 git commit -m "你的提交訊息"
 ```
@@ -121,7 +136,7 @@ git commit -m "你的提交訊息"
 問：這個內容放哪裡？
 
 ├─ 可跨專案複用？
-│  ├─ YES → .agent/skills/
+│  ├─ YES → .windsurf/skills/
 │  └─ NO → 繼續判斷
 │
 ├─ 是業務規則/流程？
