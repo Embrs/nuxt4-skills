@@ -2,6 +2,10 @@
 
 專屬於 [nuxt4-base](https://github.com/Embrs/nuxt4-base) 的 Skills 套件
 
+### 相關專
+- **本專案 NPM 連結**: https://www.npmjs.com/package/@embrs/nuxt4-skills
+- **user-feedback**: https://www.npmjs.com/package/@embrs/user-feedback
+
 ## 快速開始
 
 ```bash
@@ -40,21 +44,17 @@ npx @embrs/nuxt4-skills@latest
 ### Antigravity / Claude 使用者
 確保 Prompt 或設定檔已指向 `.agent` 目錄。
 
-### MCP：mcp-feedback-collector-web 安裝與設定路徑
+### User Feedback 技能安裝與使用
 
-本套件內建 `user-feedback` skill，若您希望在 Claude Desktop / Cursor 等環境中使用互動式回饋視窗，請先安裝並設定 `mcp-feedback-collector-web` MCP 服務。
+本套件內建 `user-feedback` skill，提供互動式回饋收集功能。若您希望在 Claude Desktop / Cursor 等環境中使用，請安裝對應的 MCP 服務。
 
-參考專案：
-https://github.com/sanshao85/mcp-feedback-collector-web
+**NPM 套件**: https://www.npmjs.com/package/@embrs/user-feedback
 
-#### 1) 安裝 Node.js 版本（推薦）
+#### 1) 安裝 User Feedback
 
 ```bash
-# 直接運行（推薦，無需全局安裝）
-npx mcp-feedback-collector
-
-# 或全局安裝
-npm install -g mcp-feedback-collector
+# 全局安裝
+npm install -g @embrs/user-feedback
 ```
 
 #### 2) 設定 Claude Desktop（claude_desktop_config.json 路徑）
@@ -68,9 +68,9 @@ npm install -g mcp-feedback-collector
 ```json
 {
   "mcpServers": {
-    "mcp-feedback-collector": {
+    "user-feedback": {
       "command": "npx",
-      "args": ["-y", "mcp-feedback-collector@latest"],
+      "args": ["-y", "@embrs/user-feedback@latest"],
       "env": {
         "MCP_API_KEY": "your_api_key_here",
         "MCP_API_BASE_URL": "https://api.ssopen.top",
