@@ -11,7 +11,7 @@
 - **[新增]** `items/tech-decisions.md` - 技術決策記錄
 - **[新增]** `items/entry-points.md` - 開發入口點說明
 - **[新增]** `.memory/context/BUSINESS_OVERVIEW.md` - 專案業務概覽
-- **[更新]** `README.md` - 替換 mcp-feedback-collector-web 為 user-feedback，更新 NPM 連結
+- **[更新]** `README.md` - 替換 mcp-feedback-collector-web 為 user-feedback，簡化 MCP 設定配置
 - **[重構]** 維護日誌格式統一化
 
 ### 2025-01-26

@@ -70,26 +70,18 @@ npm install -g @embrs/user-feedback
   "mcpServers": {
     "user-feedback": {
       "command": "npx",
-      "args": ["-y", "@embrs/user-feedback@latest"],
-      "env": {
-        "MCP_API_KEY": "your_api_key_here",
-        "MCP_API_BASE_URL": "https://api.ssopen.top",
-        "MCP_DEFAULT_MODEL": "grok-3",
-        "MCP_WEB_PORT": "5050",
-        "MCP_DIALOG_TIMEOUT": "60000",
-        "MCP_ENABLE_IMAGE_TO_TEXT": "true"
-      }
+      "args": ["-y", "@embrs/user-feedback@latest"]
     }
   }
 }
 ```
 
-**環境變數說明：**
-- `MCP_API_KEY`: AI API 金鑰（必填）
-- `MCP_API_BASE_URL`: API 基礎 URL
-- `MCP_WEB_PORT`: Web 服務端口（預設 5000）
-- `MCP_DIALOG_TIMEOUT`: 回饋收集超時時間（毫秒）
-- `MCP_ENABLE_IMAGE_TO_TEXT`: 啟用圖片轉文字功能
+**注意**：以上設定為基本配置，如需其他環境變數請參考 @embrs/user-feedback 套件文檔。
+
+**設定說明**：
+- `command`: 使用 npx 執行套件
+- `args`: 指定套件名稱與版本
+- 如需 API 金鑰或其他配置，請參考套件官方文檔
 
 完成後重啟 Claude Desktop。
 
