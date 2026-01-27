@@ -61,15 +61,26 @@ description: Git 提交 + 知識庫維護
    - **[類型]** `影響文件` - 變更描述
    ```
 
-### Step 4: 更新版本號（若有功能變更）
+### Step 4: 更新版本號（預設執行）
 
-5. 若變更類型為 `feat` 或 `fix`，更新 `package.json` 版本號：
+5. **每次提交都更新版本號**（除非純文件 typo 修正）：
 
 | 變更類型 | 版本更新 | 範例 |
 |----------|----------|------|
 | `fix` | patch +1 | 1.0.0 → 1.0.1 |
 | `feat` | minor +1 | 1.0.0 → 1.1.0 |
+| `modify` | patch +1 | 1.0.0 → 1.0.1 |
+| `refactor` | patch +1 | 1.0.0 → 1.0.1 |
+| `docs` | patch +1 | 1.0.0 → 1.0.1 |
+| `style` | patch +1 | 1.0.0 → 1.0.1 |
+| `test` | patch +1 | 1.0.0 → 1.0.1 |
+| `chore` | patch +1 | 1.0.0 → 1.0.1 |
 | 重大變更 | major +1 | 1.0.0 → 2.0.0 |
+
+**例外情況**（不更新版本號）：
+- 純文字錯字修正
+- 註解調整
+- 格式微調
 
 ```bash
 # 使用 npm version（自動更新 package.json）
@@ -103,6 +114,7 @@ npm version patch --no-git-tag-version  # 或 minor / major
 **類型**：
 - `feat`: 新功能
 - `fix`: Bug 修復
+- `modify`: 調整修改
 - `docs`: 文件更新
 - `style`: 程式碼格式
 - `refactor`: 重構
