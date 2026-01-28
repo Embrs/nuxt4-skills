@@ -9,6 +9,112 @@ const ora = require('ora');
 const TEMPLATE_DIR = path.join(__dirname, '../templates');
 
 /**
+ * 獲取可用的 skills 列表
+ */
+async function getAvailableSkills() {
+  const skillsDir = path.join(TEMPLATE_DIR, 'skills');
+  const skills = [];
+  
+  if (await fs.pathExists(skillsDir)) {
+    const items = await fs.readdir(skillsDir, { withFileTypes: true });
+    for (const item of items) {
+      if (item.isDirectory()) {
+        skills.push({
+          name: item.name,
+          value: item.name,
+          checked: ['project-knowledge', 'user-feedback'].includes(item.name)
+        });
+      }
+    }
+  }
+  
+  return skills;
+}
+
+/**
+ * 獲取可用的 workflows 列表
+ */
+async function getAvailableWorkflows() {
+  const workflowsDir = path.join(TEMPLATE_DIR, 'workflows');
+  const workflows = [];
+  
+  if (await fs.pathExists(workflowsDir)) {
+    const items = await fs.readdir(workflowsDir, { withFileTypes: true });
+    for (const item of items) {
+      if (item.isFile() && item.name.endsWith('.md')) {
+        const name = item.name.replace('.md', '');
+        workflows.push({
+          name: name,
+          value: name,
+          checked: ['git-commit', 'user-feedback'].includes(name)
+        });
+      }
+    }
+  }
+  
+  return workflows;
+}
+
+/**
+ * 複製指定的 skills
+ */
+async function copySelectedSkills(selectedSkills, destSkillsDir, targetIde) {
+  await fs.ensureDir(destSkillsDir);
+  
+  for (const skill of selectedSkills) {
+    const srcSkill = path.join(TEMPLATE_DIR, 'skills', skill);
+    const destSkill = path.join(destSkillsDir, skill);
+    
+    if (await fs.pathExists(srcSkill)) {
+      await copyAndReplacePaths(srcSkill, destSkill, targetIde);
+    }
+  }
+}
+
+/**
+ * 複製指定的 workflows
+ */
+async function copySelectedWorkflows(selectedWorkflows, destWorkflowsDir, targetIde) {
+  await fs.ensureDir(destWorkflowsDir);
+  
+  for (const workflow of selectedWorkflows) {
+    const srcWorkflow = path.join(TEMPLATE_DIR, 'workflows', `${workflow}.md`);
+    const destWorkflow = path.join(destWorkflowsDir, `${workflow}.md`);
+    
+    if (await fs.pathExists(srcWorkflow)) {
+      let content = await fs.readFile(srcWorkflow, 'utf8');
+      
+      // 根據 IDE 替換路徑引用
+      const pathReplacements = {
+        antigravity: {
+          '.agent': '.agent',
+          '.cursor': '.agent',
+          '.windsurf': '.agent'
+        },
+        cursor: {
+          '.agent': '.cursor',
+          '.cursor': '.cursor',
+          '.windsurf': '.cursor'
+        },
+        windsurf: {
+          '.agent': '.windsurf',
+          '.cursor': '.windsurf',
+          '.windsurf': '.windsurf'
+        }
+      };
+      
+      const replacements = pathReplacements[targetIde];
+      for (const [oldPath, newPath] of Object.entries(replacements)) {
+        const regex = new RegExp(`\\${oldPath}`, 'g');
+        content = content.replace(regex, newPath);
+      }
+      
+      await fs.writeFile(destWorkflow, content);
+    }
+  }
+}
+
+/**
  * 複製目錄並動態替換路徑引用
  */
 async function copyAndReplacePaths(srcDir, destDir, targetIde) {
@@ -64,6 +170,12 @@ async function main() {
   console.log(chalk.bold.blue('\n🔥  Embrs Skills Toolkit 安裝程式 \n'));
 
   try {
+    // 獲取可用的 skills 和 workflows
+    const [availableSkills, availableWorkflows] = await Promise.all([
+      getAvailableSkills(),
+      getAvailableWorkflows()
+    ]);
+
     const answers = await inquirer.prompt([
       {
         type: 'checkbox',
@@ -77,9 +189,23 @@ async function main() {
         validate: (input) => input.length > 0 || '請至少選擇一個環境'
       },
       {
+        type: 'checkbox',
+        name: 'skills',
+        message: '請選擇要安裝的 Skills（可複選，使用空白鍵選取）：',
+        choices: availableSkills,
+        validate: (input) => input.length > 0 || '請至少選擇一個 Skill'
+      },
+      {
+        type: 'checkbox',
+        name: 'workflows',
+        message: '請選擇要安裝的 Workflows（可複選，使用空白鍵選取）：',
+        choices: availableWorkflows,
+        validate: (input) => input.length > 0 || '請至少選擇一個 Workflow'
+      },
+      {
         type: 'confirm',
         name: 'confirm',
-        message: '即將安裝 Skills 與 Workflows，確定繼續嗎？',
+        message: '即將安裝選定的 Skills 與 Workflows，確定繼續嗎？',
         default: true
       }
     ]);
@@ -106,21 +232,11 @@ async function main() {
       const destSkills = path.join(destBase, 'skills');
       const destWorkflows = path.join(destBase, 'workflows');
 
-      // 確保目錄存在
-      await fs.ensureDir(destSkills);
-      await fs.ensureDir(destWorkflows);
+      // 複製選定的 Skills
+      await copySelectedSkills(answers.skills, destSkills, ide);
 
-      // 複製 Skills（使用路徑替換）
-      const srcSkills = path.join(TEMPLATE_DIR, 'skills');
-      if (await fs.pathExists(srcSkills)) {
-        await copyAndReplacePaths(srcSkills, destSkills, ide);
-      }
-
-      // 複製 Workflows（使用路徑替換）
-      const srcWorkflows = path.join(TEMPLATE_DIR, 'workflows');
-      if (await fs.pathExists(srcWorkflows)) {
-        await copyAndReplacePaths(srcWorkflows, destWorkflows, ide);
-      }
+      // 複製選定的 Workflows
+      await copySelectedWorkflows(answers.workflows, destWorkflows, ide);
 
       installedPaths.push(destBase);
     }
@@ -128,6 +244,13 @@ async function main() {
     spinner.succeed(chalk.green('安裝完成！'));
     console.log(chalk.dim('\n檔案已安裝至:'));
     installedPaths.forEach(p => console.log(chalk.dim(`  • ${p}`)));
+
+    // 顯示安裝的項目
+    console.log(chalk.cyan('\n已安裝的 Skills:'));
+    answers.skills.forEach(skill => console.log(chalk.cyan(`  • ${skill}`)));
+    
+    console.log(chalk.cyan('\n已安裝的 Workflows:'));
+    answers.workflows.forEach(workflow => console.log(chalk.cyan(`  • ${workflow}`)));
 
     // 顯示對應的提示
     if (answers.ides.includes('cursor')) {

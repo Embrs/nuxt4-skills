@@ -19,9 +19,13 @@ description: |
 ### 1. 檢查工具可用性
 ```javascript
 // 動態檢測 collect_feedback 工具 (mcp0_ 到 mcp9_)
-const availableTool = ['mcp0_collect_feedback', 'mcp1_collect_feedback', 
-                      'mcp2_collect_feedback', /* ... */ 'mcp9_collect_feedback']
-                      .find(tool => typeof tool === 'function');
+const availableTool = [
+  'mcp0_collect_feedback',
+  'mcp1_collect_feedback', 
+  'mcp2_collect_feedback', 
+  /* ... 3 4 5 6 7 8 */ 
+  'mcp9_collect_feedback'
+].find(tool => typeof tool == 'function');
 ```
 
 ### 2. 調用工具

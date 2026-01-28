@@ -6,11 +6,13 @@
 
 ### bin/cli.js
 **主要 CLI 入口點**
-- **功能**: 安裝 Skills 與 Workflows 到多種 IDE 環境
+- **功能**: 安裝 Skills 與 Workflows 到多種 IDE 環境，支援多選安裝
 - **特色**: 
   - 支援多 IDE 環境同時安裝
   - 動態路徑替換機制
   - 互動式安裝精靈
+  - **新增**: 支援多選 Skills 與 Workflows 安裝
+  - **新增**: 預設選擇 project-knowledge、user-feedback、git-commit
 - **依賴**: commander, inquirer, fs-extra, chalk, ora
 
 ## Skills 模組庫

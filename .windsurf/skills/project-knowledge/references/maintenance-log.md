@@ -4,6 +4,11 @@
 
 ## 2025-01
 
+### 2025-01-28
+- **[更新]** `bin/cli.js` - 擴展 CLI 支援多選 Skills 與 Workflows，預設選擇 project-knowledge、user-feedback、git-commit
+- **[更新]** `items/modules.md` - 更新 CLI 功能描述，新增多選安裝特性
+- **[新增]** `.windsurf/skills/project-knowledge/scripts/` - 新增腳本目錄（測試產生）
+
 ### 2025-01-27
 - **[新增]** `project-knowledge/SKILL.md` - 專案知識庫管理主文件
 - **[新增]** `items/architecture.md` - 專案架構與目錄結構
