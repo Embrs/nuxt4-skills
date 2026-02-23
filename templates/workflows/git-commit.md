@@ -4,7 +4,7 @@ description: Git 提交 + 知識庫維護
 
 # Git 提交流程
 
-> 提交變更並維護 Agent Skills 知識庫（`.agent/skills/project-knowledge/`）。
+> 提交變更並維護專案知識庫（`.memory/context/`）。
 
 ---
 
@@ -31,14 +31,14 @@ description: Git 提交 + 知識庫維護
 
 2. 根據變更檔案分析是否需要更新知識庫：
 
-#### 架構相關變更 → 更新 `.agent/skills/project-knowledge/items/`
+#### 架構相關變更 → 更新 `.memory/context/`
 
 | 變更類型 | 更新目標 |
 |----------|----------|
-| 新增模組/目錄 | `items/modules.md` |
-| 目錄結構變更 | `items/architecture.md` |
-| 技術棧/依賴升級 | `items/tech-decisions.md` |
-| 重大架構決策 | `items/tech-decisions.md` |
+| 新增模組/目錄 | `.memory/context/modules.md` |
+| 目錄結構變更 | `.memory/context/architecture.md` |
+| 技術棧/依賴升級 | `.memory/context/tech-decisions.md` |
+| 重大架構決策 | `.memory/context/tech-decisions.md` |
 
 #### 業務規則變更 → 更新 `.memory/context/`
 
@@ -52,7 +52,7 @@ description: Git 提交 + 知識庫維護
 ### Step 3: 更新維護日誌（若有知識庫變更）
 4. 若有更新知識庫，記錄到：
    ```
-   .agent/skills/project-knowledge/references/maintenance-log.md
+   .memory/context/maintenance-log.md
    ```
    
    格式：
@@ -109,28 +109,24 @@ git commit -m "你的提交訊息"
 
 | 觸發條件 | 更新位置 | 動作 |
 |----------|----------|------|
-| 新增功能模組 | `items/modules.md` | 添加模組描述 |
-| 新增業務規則 | `.memory/context/` | 新增規則文件 |
-| 資料庫 Schema 變更 | `items/architecture.md` | 更新資料模型 |
-| 技術決策變更 | `items/tech-decisions.md` | 記錄決策 |
-| OpenSpec 歸檔 | `references/maintenance-log.md` | 記錄維護 |
+| 新增功能模組 | `.memory/context/modules.md` | 添加模組描述 |
+| 新增業務規則 | `.memory/context/{rule}.md` | 新增規則文件，更新 INDEX |
+| 資料庫 Schema 變更 | `.memory/context/architecture.md` | 更新資料模型 |
+| 技術決策變更 | `.memory/context/tech-decisions.md` | 記錄決策 |
+| 重大變更完成 | `.memory/context/maintenance-log.md` | 記錄維護 |
 
 ### 內容歸屬判定
 
 ```
 問：這個內容放哪裡？
 
-├─ 可跨專案複用？
-│  ├─ YES → .agent/skills/
-│  └─ NO → 繼續判斷
-│
-├─ 是業務規則/流程？
-│  ├─ YES → .memory/context/
-│  └─ NO → 繼續判斷
-│
-├─ 是歷史記錄/歸檔？
-│  ├─ YES → .memory/archive/
-│  └─ NO → 可能不需要記錄
+├─ 是專案架構/結構？     → .memory/context/architecture.md
+├─ 是功能模組描述？       → .memory/context/modules.md
+├─ 是技術決策？           → .memory/context/tech-decisions.md
+├─ 是開發入口/慣例？      → .memory/context/entry-points.md
+├─ 是業務規則/領域知識？   → .memory/context/{描述性名稱}.md
+├─ 是歷史記錄/已完成任務？ → .memory/archive/
+└─ 以上皆非？             → 可能不需要記錄
 ```
 
 ---

@@ -4,15 +4,15 @@ description: 初始化專案架構（Agent Skills 版）
 
 # 專案初始化
 
-> 掃描專案並生成 `.windsurf/skills/` 與 `.memory/` 知識庫結構。
+> 掃描專案並生成 `.windsurf/skills/` 與 `.memory/context/` 知識庫結構。
 
 ---
 
 ## 🔴 核心原則
 
-1. **Skills 系統**：技能文件存放於 `.windsurf/skills/`，可按需載入
-2. **知識分離**：通用框架放 `.windsurf/skills/`，專案特定內容放 `.memory/`
-3. **專案分析先行**：先分析專案結構，再生成適合的技能文件
+1. **Skills 系統**：技能指令存放於 `.windsurf/skills/`，可按需載入
+2. **知識統一**：所有專案知識統一存於 `.memory/context/`（跨 AI 工具共享）
+3. **專案分析先行**：先分析專案結構，再生成適合的知識文件
 
 ---
 
@@ -20,21 +20,22 @@ description: 初始化專案架構（Agent Skills 版）
 
 ```
 .windsurf/
-├── skills/                     # Agent Skills（可跨專案複用）
+├── skills/                     # Agent Skills（僅存行為指令）
 │   └── project-knowledge/      # 專案知識庫管理
-│       ├── SKILL.md            # 主文件
-│       ├── items/              # 知識項目
-│       │   ├── architecture.md # 目錄結構
-│       │   ├── modules.md      # 功能模組
-│       │   ├── tech-decisions.md # 技術決策
-│       │   └── entry-points.md # 開發入口
-│       └── references/         # 參考資料
-│           └── maintenance-log.md # 維護日誌
+│       ├── SKILL.md            # AI 行為指令（不存知識內容）
+│       ├── templates/          # 初始化參考模板
+│       └── scripts/            # 輔助腳本
 └── workflows/                  # 工作流程
 
 .memory/
-├── context/                    # 專案特定業務規則
-│   └── BUSINESS_OVERVIEW.md    # 業務概覽
+├── context/                    # 專案知識（跨 AI 工具共享）
+│   ├── INDEX.md               # 快速索引（必讀入口）
+│   ├── architecture.md        # 目錄結構、分層設計
+│   ├── modules.md             # 功能模組清單
+│   ├── tech-decisions.md      # 技術決策記錄
+│   ├── entry-points.md        # 開發入口點
+│   ├── maintenance-log.md     # 維護日誌
+│   └── {業務知識}.md           # 業務規則、領域知識
 └── archive/                    # 歷史歸檔
 ```
 
@@ -59,153 +60,74 @@ description: 初始化專案架構（Agent Skills 版）
 // turbo
 5. 創建所有目錄：
    ```bash
-   mkdir -p .windsurf/skills/project-knowledge/{items,references,scripts} .memory/{context,archive}
+   mkdir -p .windsurf/skills/project-knowledge/{templates,scripts} .memory/{context,archive}
    ```
 
-### Phase 3: 創建知識庫文件
+### Phase 3: 創建 Skill 指令文件
 // turbo
-6. 創建 `.windsurf/skills/project-knowledge/SKILL.md`
-// turbo
-7. 創建 `items/architecture.md`
-// turbo
-8. 創建 `items/modules.md`
-// turbo
-9. 創建 `items/tech-decisions.md`
-// turbo
-10. 創建 `items/entry-points.md`
-// turbo
-11. 創建 `references/maintenance-log.md`
+6. 創建 `.windsurf/skills/project-knowledge/SKILL.md`（純 AI 行為指令，不含知識內容）
 
-### Phase 4: 創建業務文件（專案特定）
+### Phase 4: 生成知識庫文件（存於 `.memory/context/`）
 // turbo
-12. 創建 `.memory/context/BUSINESS_OVERVIEW.md`
+7. 創建 `.memory/context/INDEX.md`（快速索引）
+// turbo
+8. 創建 `.memory/context/architecture.md`（目錄結構）
+// turbo
+9. 創建 `.memory/context/modules.md`（功能模組）
+// turbo
+10. 創建 `.memory/context/tech-decisions.md`（技術決策）
+// turbo
+11. 創建 `.memory/context/entry-points.md`（開發入口）
+// turbo
+12. 創建 `.memory/context/maintenance-log.md`（維護日誌）
 
 ### Phase 5: 填充內容
-13. 根據 Phase 1 結果更新：
-    - `items/architecture.md`：目錄結構、分層設計
-    - `items/modules.md`：功能模組清單
-    - `items/tech-decisions.md`：技術決策記錄
-    - `items/entry-points.md`：開發入口點
-    - `.memory/context/BUSINESS_OVERVIEW.md`：專案業務概覽
+13. 根據 Phase 1 結果更新（**必須根據實際專案生成，不要照抄模板**）：
+    - `.memory/context/INDEX.md`：專案概覽與知識索引
+    - `.memory/context/architecture.md`：目錄結構、分層設計
+    - `.memory/context/modules.md`：功能模組清單
+    - `.memory/context/tech-decisions.md`：技術決策記錄
+    - `.memory/context/entry-points.md`：開發入口點
 
 ### Phase 6: 驗證
 // turbo
 14. 驗證：
     - [ ] `project-knowledge/SKILL.md` 存在且格式正確
-    - [ ] `items/` 包含 4 個核心檔案
-    - [ ] `references/maintenance-log.md` 已初始化
-    - [ ] `.memory/context/BUSINESS_OVERVIEW.md` 存在
+    - [ ] `.memory/context/INDEX.md` 存在且包含專案概覽
+    - [ ] `.memory/context/` 包含 6 個核心檔案
+    - [ ] `.memory/archive/` 目錄存在
 
 ### Phase 7: 回覆摘要
 15. 回覆專案概覽：語言、框架、技術棧、模組數量、創建檔案
 
 ---
 
-## 📄 模板
+## 📄 模板說明
 
-### 模板 A：SKILL.md
+模板文件位於 `.windsurf/skills/project-knowledge/templates/`，僅供初始化時參考格式。
 
-```markdown
----
-name: project-knowledge
-description: |
-  專案知識庫管理技能。了解專案架構、查找模組位置、
-  維護知識庫生命週期。回答「是什麼」「在哪裡」「為什麼」。
----
+**AI 生成知識時必須根據實際專案內容填充，不要照抄模板佔位符。**
 
-# 專案知識庫
-
-> 通用專案知識管理框架
-
-## 快速導航
-
-| 文件 | 說明 |
-|------|------|
-| [architecture.md](items/architecture.md) | 目錄結構、分層設計 |
-| [modules.md](items/modules.md) | 功能模組清單 |
-| [tech-decisions.md](items/tech-decisions.md) | 技術決策記錄 |
-| [entry-points.md](items/entry-points.md) | 開發入口點 |
-
-## 業務內容索引
-
-> 專案特定的業務邏輯存放於 `.memory/context/`
-
-| 業務類型 | 位置 |
-|----------|------|
-| 業務概覽 | `.memory/context/BUSINESS_OVERVIEW.md` |
-| 業務規則 | `.memory/context/*.md` |
-| 歷史歸檔 | `.memory/archive/` |
-
-## 知識維護
-
-### 觸發更新時機
-
-| 觸發條件 | 更新位置 | 動作 |
-|----------|----------|------|
-| 新增功能模組 | `items/modules.md` | 添加模組描述 |
-| 新增業務規則 | `.memory/context/` | 新增規則文件 |
-| 資料庫 Schema 變更 | `items/architecture.md` | 更新資料模型 |
-| 技術決策變更 | `items/tech-decisions.md` | 記錄決策 |
-```
-
-### 模板 B：maintenance-log.md
-
-```markdown
-# 知識庫維護日誌
-
-> 記錄所有知識庫變更歷史
-
-## YYYY-MM
-
-### YYYY-MM-DD
-- **[新增]** `文件名` - 描述
-
----
-
-## 記錄格式
-
-### 變更類型
-- `[新增]` - 新增文件或內容
-- `[更新]` - 更新現有內容
-- `[刪除]` - 刪除文件
-- `[歸檔]` - 移至歸檔
-- `[重構]` - 結構調整
-```
-
-### 模板 C：BUSINESS_OVERVIEW.md
-
-```markdown
-# 專案業務概覽
-
-> 專案特定的業務邏輯與概念，供 AI 參考。
-
-## 專案定位
-
-**[專案名稱]**
-- **定位**：[一句話描述]
-- **技術棧**：[主要技術]
-- **部署**：[部署平台]
-
-## 關鍵概念速查
-
-<!-- 根據專案填充 -->
-
-## 業務規則索引
-
-| 規則 | 文件 |
-|------|------|
-| - | - |
-```
+| 模板 | 用途 | 生成位置 |
+|------|------|----------|
+| `templates/INDEX.md` | 快速索引格式 | `.memory/context/INDEX.md` |
+| `templates/architecture.md` | 架構描述格式 | `.memory/context/architecture.md` |
+| `templates/modules.md` | 模組清單格式 | `.memory/context/modules.md` |
+| `templates/tech-decisions.md` | 技術決策格式 | `.memory/context/tech-decisions.md` |
+| `templates/entry-points.md` | 開發入口格式 | `.memory/context/entry-points.md` |
+| `templates/maintenance-log.md` | 維護日誌格式 | `.memory/context/maintenance-log.md` |
 
 ---
 
 ## 🔄 與舊結構的對應
 
-| 舊結構 (`.project/`) | 新結構 |
-|---------------------|--------|
-| `ARCHITECTURE.md` | `.windsurf/skills/project-knowledge/SKILL.md` |
-| `architecture/*.md` | `.windsurf/skills/project-knowledge/items/*.md` |
-| `CONVENTIONS.md` | `.windsurf/skills/*/SKILL.md` (分散到各技能) |
-| `PROJECT_STATE.md` | 由 OpenSpec + `/task` workflow 管理 |
-| `business/*.md` | `.memory/context/*.md` |
-| `archive/*.md` | `.memory/archive/*.md` |
+| 舊結構 | 新結構 |
+|--------|--------|
+| `.windsurf/skills/project-knowledge/items/*.md` | `.memory/context/*.md` |
+| `.windsurf/skills/project-knowledge/references/*` | `.memory/context/maintenance-log.md` |
+| `.project/ARCHITECTURE.md` | `.memory/context/architecture.md` |
+| `.project/architecture/*.md` | `.memory/context/*.md` |
+| `.project/CONVENTIONS.md` | `.windsurf/skills/*/SKILL.md`（分散到各技能） |
+| `.project/PROJECT_STATE.md` | 由 OpenSpec + `/task` workflow 管理 |
+| `.project/business/*.md` | `.memory/context/*.md` |
+| `.project/archive/*.md` | `.memory/archive/*.md` |
