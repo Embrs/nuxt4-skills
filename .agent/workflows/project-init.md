@@ -4,13 +4,13 @@ description: 初始化專案架構（Agent Skills 版）
 
 # 專案初始化
 
-> 掃描專案並生成 `.windsurf/skills/` 與 `.memory/` 知識庫結構。
+> 掃描專案並生成 `.agent/skills/` 與 `.memory/` 知識庫結構。
 
 ---
 
 ## 🔴 核心原則
 
-1. **Skills 系統**：技能指令存放於 `.windsurf/skills/`，可按需載入
+1. **Skills 系統**：技能指令存放於 `.agent/skills/`，可按需載入
 2. **知識統一**：所有專案知識統一存於 `.memory/context/`（跨 AI 工具共享）
 3. **專案分析先行**：先分析專案結構，再生成適合的知識文件
 
@@ -19,7 +19,7 @@ description: 初始化專案架構（Agent Skills 版）
 ## 目錄結構
 
 ```
-.windsurf/
+.agent/
 ├── skills/                     # Agent Skills（僅存行為指令）
 │   └── project-knowledge/      # 專案知識庫管理
 │       ├── SKILL.md            # AI 行為指令（不存知識內容）
@@ -60,12 +60,12 @@ description: 初始化專案架構（Agent Skills 版）
 // turbo
 5. 創建所有目錄：
    ```bash
-   mkdir -p .windsurf/skills/project-knowledge/{templates,scripts} .memory/{context,archive}
+   mkdir -p .agent/skills/project-knowledge/{templates,scripts} .memory/{context,archive}
    ```
 
 ### Phase 3: 創建 Skill 指令文件
 // turbo
-6. 創建 `.windsurf/skills/project-knowledge/SKILL.md`（純 AI 行為指令，不含知識內容）
+6. 創建 `.agent/skills/project-knowledge/SKILL.md`（純 AI 行為指令，不含知識內容）
 
 ### Phase 4: 生成知識庫文件（存於 `.memory/context/`）
 // turbo
@@ -104,7 +104,7 @@ description: 初始化專案架構（Agent Skills 版）
 
 ## 📄 模板說明
 
-模板文件位於 `.windsurf/skills/project-knowledge/templates/`，僅供初始化時參考格式。
+模板文件位於 `.agent/skills/project-knowledge/templates/`，僅供初始化時參考格式。
 
 **AI 生成知識時必須根據實際專案內容填充，不要照抄模板佔位符。**
 
@@ -123,11 +123,11 @@ description: 初始化專案架構（Agent Skills 版）
 
 | 舊結構 | 新結構 |
 |--------|--------|
-| `.windsurf/skills/project-knowledge/items/*.md` | `.memory/context/*.md` |
-| `.windsurf/skills/project-knowledge/references/*` | `.memory/context/maintenance-log.md` |
+| `.agent/skills/project-knowledge/items/*.md` | `.memory/context/*.md` |
+| `.agent/skills/project-knowledge/references/*` | `.memory/context/maintenance-log.md` |
 | `.project/ARCHITECTURE.md` | `.memory/context/architecture.md` |
 | `.project/architecture/*.md` | `.memory/context/*.md` |
-| `.project/CONVENTIONS.md` | `.windsurf/skills/*/SKILL.md`（分散到各技能） |
+| `.project/CONVENTIONS.md` | `.agent/skills/*/SKILL.md`（分散到各技能） |
 | `.project/PROJECT_STATE.md` | 由 OpenSpec + `/task` workflow 管理 |
 | `.project/business/*.md` | `.memory/context/*.md` |
 | `.project/archive/*.md` | `.memory/archive/*.md` |

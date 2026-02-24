@@ -20,6 +20,7 @@ npx @embrs/nuxt4-skills@latest
   - ✅ **Antigravity / Claude / VS Code** → `.agent/`
   - ✅ **Cursor** → `.cursor/`
   - ✅ **Windsurf** → `.windsurf/`
+  - ✅ **GitHub Copilot** → `.github/`
 - **標準化技能**：內建經過驗證的 8 大 Skills 模組
 - **通用 Workflows**：Git Commit 規範、專案初始化等
 
@@ -43,6 +44,9 @@ npx @embrs/nuxt4-skills@latest
 
 ### Antigravity / Claude 使用者
 確保 Prompt 或設定檔已指向 `.agent` 目錄。
+
+### GitHub Copilot 使用者
+確保您的設定或 Workspace 已包含 `.github` 目錄，您可以藉由在 `.github/skills/` 放置技能來供 Copilot 讀取。
 
 ### User Feedback 技能安裝與使用
 

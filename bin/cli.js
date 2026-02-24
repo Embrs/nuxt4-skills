@@ -100,6 +100,11 @@ async function copySelectedWorkflows(selectedWorkflows, destWorkflowsDir, target
           '.agent': '.windsurf',
           '.cursor': '.windsurf',
           '.windsurf': '.windsurf'
+        },
+        copilot: {
+          '.agent': '.github',
+          '.cursor': '.github',
+          '.windsurf': '.github'
         }
       };
       
@@ -136,6 +141,11 @@ async function copyAndReplacePaths(srcDir, destDir, targetIde) {
       '.agent': '.windsurf',
       '.cursor': '.windsurf',
       '.windsurf': '.windsurf'
+    },
+    copilot: {
+      '.agent': '.github',
+      '.cursor': '.github',
+      '.windsurf': '.github'
     }
   };
 
@@ -184,7 +194,8 @@ async function main() {
         choices: [
           { name: 'Antigravity / Claude / VS Code → .agent/', value: 'antigravity', checked: true },
           { name: 'Cursor → .cursor/', value: 'cursor' },
-          { name: 'Windsurf → .windsurf/', value: 'windsurf' }
+          { name: 'Windsurf → .windsurf/', value: 'windsurf' },
+          { name: 'GitHub Copilot → .github/', value: 'copilot' }
         ],
         validate: (input) => input.length > 0 || '請至少選擇一個環境'
       },
@@ -223,7 +234,8 @@ async function main() {
     const idePathMap = {
       antigravity: '.agent',
       cursor: '.cursor',
-      windsurf: '.windsurf'
+      windsurf: '.windsurf',
+      copilot: '.github'
     };
 
     // 遍歷所有選擇的 IDE 環境進行安裝
@@ -261,6 +273,11 @@ async function main() {
     if (answers.ides.includes('antigravity')) {
       console.log(chalk.cyan('\n[提示] Antigravity / Claude 使用者:'));
       console.log(chalk.cyan('請確認您的 Prompt 或設定檔已指向 .agent 目錄。'));
+    }
+
+    if (answers.ides.includes('copilot')) {
+      console.log(chalk.cyan('\n[提示] GitHub Copilot 使用者:'));
+      console.log(chalk.cyan('請確認您的設定或 Workspace 已包含 .github 目錄。'));
     }
 
   } catch (err) {
